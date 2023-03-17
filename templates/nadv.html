@@ -1,0 +1,30 @@
+{% extends 'flatpages/default.html' %}
+{% load i18n %}
+
+{% block content %}
+<html lang="en">
+
+<hr />
+
+        <header class="bg-light py-5">
+            <div class="container px-2 px-lg-5 my-5">
+                <div class="text-center text-purple">
+                    <h1 class="display-4 fw-bolder">{{ nadv.head_adv }}</h1>
+                    <p class="lead fw-normal text-dark-50 mb-0">{{ nadv.text_adv }}</p>
+                </div>
+            </div>
+        </header>
+
+<p style="text-align: center;">&nbsp;</p>
+<hr />
+<h4 style="text-align: right;"><span style="color: #333333;">
+    {{ nadv.date_adv }}&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span></h4>
+<h4 style="text-align: right;"><span style="color: #333333;">
+    Категория:&nbsp;<img src="computer" alt="" /><img src="computer" alt="" />
+    {{ nadv.category_name }}&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span></h4>
+<img class="card-img-top" src="{{nadv.content.url}}" alt="..." />
+<!--{% block title %}-->
+<!--"Новость"-->
+<!--{% endblock title %}-->
+
+{% endblock content %}
