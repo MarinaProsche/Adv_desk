@@ -9,7 +9,7 @@ from .filters import AdvFilter
 
 class AdvList(ListView):
     model = Adv
-    ordering = 'date_adv'
+    ordering = '-date_adv'
     template_name = 'adv.html'
     context_object_name = 'adv'
     # paginate_by = 10
@@ -53,7 +53,7 @@ class AdvInline():
                 formset_save_func(formset)
             else:
                 formset.save()
-        return redirect('advs')
+        return redirect ('advs')
 
     def formset_medias_valid(self, formset):
         """
@@ -106,27 +106,3 @@ class AdvUpdate(AdvInline, UpdateView):
             'medias': AddMediaFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object,
                                            prefix='medias'),
             }
-
-    # def form_valid(self, form):
-    #     form.instance.author = Adv.objects.filter(author__user=self.request.user)
-    #     return super().form_valid(form)
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['form'] = AdvForm()
-    #     return context
-    #
-    # def post(self, request, *args, **kwargs):
-    #     form = self.form_class(request.POST)
-    #     if form.is_valid():
-    #         author = form.save(commit=False)
-    #         author.author = self.request.user
-    #         author.save()
-    #     return redirect('/')
-
-    # def form_valid(self, form):
-    #     post = form.save(commit=False)
-    #     path = self.request.META['PATH_INFO']
-    #     post = form.save()
-        # send_post_for_subscribers_celery.delay(post.pk)
-        # return super().form_valid(form)

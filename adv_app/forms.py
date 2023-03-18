@@ -3,10 +3,13 @@ from django.forms import inlineformset_factory
 from django.core.exceptions import ValidationError
 
 from .models import Adv, Author, User, Media
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
+
 import datetime
 
 class AdvForm(forms.ModelForm):
     head_adv = forms.CharField(required=False)
+    text_adv = forms.CharField(widget=CKEditorUploadingWidget())
 
     class Meta:
         model = Adv

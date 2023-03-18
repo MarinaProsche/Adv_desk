@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.urls import reverse
 import adv_project.settings
+from ckeditor.fields import RichTextField
 
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -26,7 +27,7 @@ CATEGORY_NAME = [('tanks', 'Танки'),
 class Adv(models.Model):
     date_adv = models.DateTimeField(auto_now_add=True)
     head_adv = models.CharField(max_length = 50, null=True)
-    text_adv = models.TextField()
+    text_adv = RichTextField()
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     category_name = models.CharField(max_length = 20, choices = CATEGORY_NAME, default='other')
     is_active = models.BooleanField(default=True)

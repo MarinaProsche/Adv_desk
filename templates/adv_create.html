@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 {% extends 'flatpages/default.html' %}
-
+{% load static %}
 
 <html lang="en">
 
 {% block content %}
 <form enctype="multipart/form-data" class="container" method="post" id="product_form">
     {% csrf_token %}
+    {{ form.media }}
     <!-- main form start --- in our case product form -->
     <div class="card">
         <div class="card-header card-header-secondary">
             <h4 class="card-title">Создать объявление:</h4>
         </div>
+
         {% for field in form %}
             <div class="form-group card-body">
-                <label>{{field.label}}</label>
+                <label>{{field.label}} </label>
                 {% if field.field.required %}
                     <span style="color: red;" class="required">*</span>
                 {% endif %}
@@ -25,6 +27,7 @@
                 {% endif %}
                 {% for error in field.errors %}
                     <p style="color: red">{{ error }}</p>
+
                 {% endfor %}
             </div>
         {% endfor %}
