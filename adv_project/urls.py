@@ -21,6 +21,9 @@ from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('sign/', include('sign.urls')),
+    path('', include('personalpage.urls')),
+    path('accounts/', include('allauth.urls')),
     path('pages/', include('django.contrib.flatpages.urls')),
     path('advs/', include('adv_app.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),

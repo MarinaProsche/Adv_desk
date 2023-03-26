@@ -1,8 +1,7 @@
 from django.contrib import admin
-from .models import User, Adv, Reply, Author, Media
+from .models import User, Adv, Reply, Author, Media, CodeActivate
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
-
 
 class AdvAdminForm(forms.ModelForm):
     text_adv = forms.CharField(widget=CKEditorUploadingWidget())
@@ -20,5 +19,6 @@ admin.site.register(Adv)
 admin.site.register(Reply)
 admin.site.register(Author)
 admin.site.register(Media)
+admin.site.register(CodeActivate)
 
 # Register your models here.

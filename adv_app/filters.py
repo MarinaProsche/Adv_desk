@@ -1,5 +1,5 @@
-from django_filters import FilterSet, ModelMultipleChoiceFilter, DateFilter
-from .models import Adv
+from django_filters import FilterSet, ModelMultipleChoiceFilter, DateFilter, DateRangeFilter
+from .models import Adv, Reply
 from django.forms import DateInput
 
 class AdvFilter(FilterSet):
@@ -26,3 +26,15 @@ class AdvFilter(FilterSet):
         fields = {
            'head_adv': ['icontains'],
         }
+
+
+class UserAdvFilter(FilterSet):
+    date_replay = DateRangeFilter()
+
+    def __init__(self, *args, **kwargs):
+        super(UserAdvFilter, self).__init__(*args, **kwargs)
+        self.filters['text_reply'].queryset = Adv.objects.filter(author_id=kwargs['request'])
+
+    class Meta:
+        model = Reply
+        fields = ('text_reply', 'date_replay',)

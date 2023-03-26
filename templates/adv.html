@@ -1,4 +1,4 @@
-{% extends 'flatpages/default.html' %} 
+{% extends 'flatpages/default.html' %}
 
  {% block content %}
 <!-- Header-->
@@ -10,6 +10,10 @@
                 </div>
             </div>
         </header>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form}}
+    <input type="submit" value="Авторизоваться" />
 
 <div class="text-center text-dark">
 <form action="" method="get">
@@ -65,4 +69,5 @@
                 </div>
             </div>
         </section>
+
 {% endblock content %}

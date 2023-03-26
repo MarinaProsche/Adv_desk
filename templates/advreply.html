@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<h1>Пожалуйста, напишите свое сообщение</h1>
+<hr>
+<form action="{% url "replycreate" adv_id=adv.id %}" method="post">
+    {% csrf_token %}
+    <p>{{form}}</p>
+    <input type="submit" value="Отправить" />
+
+<h1>Обратите внимание, Ваш отклик появится на странице только если автор подтвердит его</h1>
+</form>
+{% endblock content %}
