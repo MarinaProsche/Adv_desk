@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
-from .models import Adv, Reply, Author, Media
+from .models import Adv, Reply, Author
 from .forms import AdvForm, CreateReplyForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -27,7 +27,7 @@ class AdvList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
-        context['content'] = Adv.objects.prefetch_related('media').values('media__content')
+        # context['content'] = Adv.objects.prefetch_related('media').values('media__content')
         # context['current_time'] = timezone.localtime(timezone.now())
         # context['timezones'] = pytz.common_timezones
         return context
@@ -67,42 +67,6 @@ class AdvDetail(CustomSuccessMessageMixin, LoginRequiredMixin, FormMixin, Detail
         self.object.save()
         return super().form_valid(form)
 
-# class AdvInline():
-#     form_class = AdvForm
-#     model = Adv
-#     template_name = "adv_create"
-#     success_msg = 'Поздравляем! Ваше объявление опубликовано!'
-#
-#     def form_valid(self, form):
-#         named_formsets = self.get_named_formsets()
-#         if not all((x.is_valid() for x in named_formsets.values())):
-#             return self.render_to_response(self.get_context_data(form=form))
-#
-#         self.object = form.save()
-#         for every formset, attempt to find a specific formset save function
-#         otherwise, just save.
-#
-#         for name, formset in named_formsets.items():
-#             formset_save_func = getattr(self, 'formset_{0}_valid'.format(name), None)
-#             if formset_save_func is not None:
-#                 formset_save_func(formset)
-#             else:
-#                 formset.save()
-#         return redirect('advs')
-
-    # def formset_medias_valid(self, formset):
-        """
-        Hook for custom formset saving.Useful if you have multiple formsets
-        """
-        # medias = formset.save(commit=False)  # self.save_formset(formset, contact)
-        # add this 2 lines, if you have can_delete=True parameter
-        # set in inlineformset_factory func
-        # for obj in formset.deleted_objects:
-        #     obj.delete()
-        # for media in medias:
-        #     media.adv = self.object
-        #     media.save()
-
 class AdvCreate(CustomSuccessMessageMixin, LoginRequiredMixin, CreateView):
     # permission_required = ('adv_app.add_adv')
     form_class = AdvForm
@@ -120,22 +84,8 @@ class AdvCreate(CustomSuccessMessageMixin, LoginRequiredMixin, CreateView):
             author = form.save(commit=False)
             author.author = self.request.user
             author.save()
-        return redirect('/')
+        return redirect('/advs/')
 
-    # def get_context_data(self, **kwargs):
-    #     ctx = super(AdvCreate, self).get_context_data(**kwargs)
-    #     ctx['named_formsets'] = self.get_named_formsets()
-    #     return ctx
-
-    # def get_named_formsets(self):
-    #     if self.request.method == "GET":
-    #         return {
-    #             'medias': AddMediaFormSet(prefix='medias'),
-    #         }
-    #     else:
-    #         return {
-    #             'medias': AddMediaFormSet(self.request.POST or None, self.request.FILES or None, prefix='medias'),
-    #         }
 
 class AdvUpdate(CustomSuccessMessageMixin, LoginRequiredMixin, UpdateView):
     # permission_required = ('adv_app.change_adv',)
@@ -150,16 +100,6 @@ class AdvUpdate(CustomSuccessMessageMixin, LoginRequiredMixin, UpdateView):
         kwargs['author'] = self.request.user
         return kwargs
 
-    # def get_context_data(self, **kwargs):
-    #     ctx = super(AdvUpdate, self).get_context_data(**kwargs)
-    #     ctx['named_formsets'] = self.get_named_formsets()
-    #     return ctx
-    #
-    # def get_named_formsets(self):
-    #     return {
-    #         'medias': AddMediaFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object,
-    #                                        prefix='medias'),
-    #         }
 class AdvDelete(LoginRequiredMixin, DeleteView,):
     # permission_required = ('adv_app.delete_adv',)
     model = Adv
@@ -168,3 +108,16 @@ class AdvDelete(LoginRequiredMixin, DeleteView,):
 
 class DetailReply(DetailView):
     model = Reply
+
+# def image_upload_view(request):
+#     """Process images uploaded by users"""
+#     if request.method == 'POST':
+#         form = AdvForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             Get the current instance object to display in the template
+#             content = form.instance
+#             return render(request, 'adv_create.html', {'form': form, 'content': content})
+#     else:
+#         form = AdvForm()
+#     return render(request, 'adv_create.html', {'form': form})

@@ -6,6 +6,11 @@ from django.urls import reverse
 import adv_project.settings
 from ckeditor.fields import RichTextField
 
+
+
+def author_directory_path(instance, filename):
+    return 'user_{0}/{1}'.format(instance.author.id, filename)
+
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     def __str__(self):
@@ -23,6 +28,7 @@ CATEGORY_NAME = [('tanks', 'Танки'),
                  ('spellmasters', 'Мастера заклинаний'),
                  ('other', 'другое')]
 
+
 class Adv(models.Model):
     date_adv = models.DateTimeField(auto_now_add=True)
     head_adv = models.CharField(max_length = 50, null=True)
@@ -31,6 +37,7 @@ class Adv(models.Model):
     category_name = models.CharField(max_length = 20, choices = CATEGORY_NAME, default='other')
     is_active = models.BooleanField(default=True)
                 #для того, чтобы если новость удалили, она сохранилась, просто не показывалась
+    content = models.ImageField(upload_to='users/%Y/%m/%d/', null=True, blank = True)
 
     def preview(self):
         if len(self.text_adv) < 128:
@@ -50,12 +57,6 @@ class Adv(models.Model):
     #     super().save(*args, **kwargs)  # сначала вызываем метод родителя, чтобы объект сохранился
     #     cache.delete(f'adv-{self.pk}')  # затем удаляем его из кэша, чтобы сбросить его
 
-def author_directory_path(instance, filename):
-    return path.join(adv_project.settings.MEDIA_ROOT, 'files', str(instance.adv.author_id), filename)
-
-class Media(models.Model):
-    adv = models.ForeignKey(Adv, related_name = 'media', on_delete=models.CASCADE)
-    content = models.ImageField(upload_to=author_directory_path, null=True)
 
 class Reply(models.Model):
     adv = models.ForeignKey(Adv, on_delete = models.CASCADE, related_name='reply')

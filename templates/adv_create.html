@@ -10,17 +10,18 @@ Add post
 
 {% block content %}
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.media }}
-    <p>Заголовок: {{ form.head_adv }}</p>
-    <p>Категория: {{ form.category_name }}</p>
-    <p>Текст</p>
+    <br>Заголовок: {{ form.head_adv }}
+    <br>Категория: {{ form.category_name }}
+    <br>файл для обложки: {{ form.content }}
+    Текст
     {% autoescape off %}
-    <p>{{ form.text_adv }}</p>
+    <br>{{ form.text_adv }}
     {% endautoescape %}
-    <input type="submit" value="Добавить обьявление">
-
+    <button type="submit">Upload</button>
     <hr class="my-4" />
 </form>
+
 {% endblock content %}
