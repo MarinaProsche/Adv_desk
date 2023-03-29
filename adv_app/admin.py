@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Adv, Reply, Author, CodeActivate
+from .models import User, Adv, Reply, CodeActivate
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
@@ -17,7 +17,6 @@ class AdvAdmin(admin.ModelAdmin):
 
 admin.site.register(Adv)
 admin.site.register(Reply)
-admin.site.register(Author)
 admin.site.register(CodeActivate)
 
 # Register your models here.

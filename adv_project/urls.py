@@ -29,6 +29,6 @@ urlpatterns = [
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 
- #для того, чтобы обрабатывались файлы
+ #для того, чтобы у пользователя была возможность обрабатывать файлы
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

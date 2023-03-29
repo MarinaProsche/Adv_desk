@@ -1,40 +1,19 @@
-from django_filters import FilterSet, ModelMultipleChoiceFilter, DateFilter, DateRangeFilter
-from .models import Adv, Reply
+from django_filters import FilterSet, AllValuesFilter, CharFilter, ModelMultipleChoiceFilter, DateFilter, ModelChoiceFilter, DateRangeFilter, ChoiceFilter
+from .models import Adv, Reply, CATEGORY_NAME
 from django.forms import DateInput
 
 class AdvFilter(FilterSet):
-    Tag = ModelMultipleChoiceFilter(
-        field_name = 'category',
-        queryset = Adv.objects.all().values('category_name'),
-        label = 'выберите категорию',
-        conjoined = False,
-    )
+    text_adv = CharFilter(field_name='head_adv', lookup_expr='icontains', label='Поиск')
+    category_name = ChoiceFilter(choices=CATEGORY_NAME, label = 'Выберите категорию', empty_label = 'все категории')
+
 
     TimeAdding = DateFilter(
         'date_adv',
         lookup_expr='gt',
-        label='опубликовано до',
+        label='Опубликовано до',
         widget=DateInput(
             attrs={
                 'type': 'date'
             }
         )
     )
-
-    class Meta:
-        model = Adv
-        fields = {
-           'head_adv': ['icontains'],
-        }
-
-
-class UserAdvFilter(FilterSet):
-    date_replay = DateRangeFilter()
-
-    def __init__(self, *args, **kwargs):
-        super(UserAdvFilter, self).__init__(*args, **kwargs)
-        self.filters['text_reply'].queryset = Adv.objects.filter(author_id=kwargs['request'])
-
-    class Meta:
-        model = Reply
-        fields = ('text_reply', 'date_replay',)

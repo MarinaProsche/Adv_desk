@@ -1,4 +1,4 @@
-from os import path
+import os
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.cache import cache
@@ -7,14 +7,12 @@ import adv_project.settings
 from ckeditor.fields import RichTextField
 
 
+class CodeActivate(models.Model):
+    user = models.CharField(max_length=30)
+    code = models.CharField(max_length=6)
 
 def author_directory_path(instance, filename):
-    return 'user_{0}/{1}'.format(instance.author.id, filename)
-
-class Author(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    def __str__(self):
-        return f'{self.user}'
+    return os.path.join(f'user_{instance.author.id}', filename)
 
 CATEGORY_NAME = [('tanks', 'Танки'),
                  ('heals', 'Хилы'),
@@ -31,13 +29,13 @@ CATEGORY_NAME = [('tanks', 'Танки'),
 
 class Adv(models.Model):
     date_adv = models.DateTimeField(auto_now_add=True)
-    head_adv = models.CharField(max_length = 50, null=True)
+    head_adv = models.CharField(max_length = 50, null=True, verbose_name = 'Заголовок')
     text_adv = RichTextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "authoruser")
-    category_name = models.CharField(max_length = 20, choices = CATEGORY_NAME, default='other')
+    category_name = models.CharField(max_length = 20, choices = CATEGORY_NAME, default='other', verbose_name = 'Категория')
     is_active = models.BooleanField(default=True)
                 #для того, чтобы если новость удалили, она сохранилась, просто не показывалась
-    content = models.ImageField(upload_to='users/%Y/%m/%d/', null=True, blank = True)
+    content = models.ImageField(upload_to=author_directory_path, null=True, blank = True)
 
     def preview(self):
         if len(self.text_adv) < 128:
@@ -52,11 +50,12 @@ class Adv(models.Model):
     def get_absolute_url(self):
         return reverse('nadv', args=[str(self.id)])
 
-
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)  # сначала вызываем метод родителя, чтобы объект сохранился
-    #     cache.delete(f'adv-{self.pk}')  # затем удаляем его из кэша, чтобы сбросить его
-
+    @property
+    def adv_popular(self):
+        self.rating = 0
+        all_reply = Reply.objects.filter(adv=self, status=True).count()
+        return all_reply > 3
+#     популярные объявления с комментариями больше трех (для периодических задач)
 
 class Reply(models.Model):
     adv = models.ForeignKey(Adv, on_delete = models.CASCADE, related_name='reply')
@@ -71,12 +70,3 @@ class Reply(models.Model):
     def accept_reply(self):
         self.status = True
         self.save()
-
-
-    # def get_absolute_url(self):
-    #     return reverse('reply', kwargs={'pk':self.id})
-
-
-class CodeActivate(models.Model):
-    user = models.CharField(max_length=30)
-    code = models.CharField(max_length=6)

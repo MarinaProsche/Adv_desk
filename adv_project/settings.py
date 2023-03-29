@@ -37,20 +37,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'adv_app',
+    'adv_app.apps.AdvAppConfig',
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django_filters',
     'ckeditor',
-    # 'django_bootstrap5',
-    # 'ckeditor_uploader',
     'sign',
     'personalpage',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-]
+    "django_apscheduler",]
 
 SITE_ID = 1
 
@@ -176,3 +174,6 @@ EMAIL_HOST_PASSWORD = 'youhxtjhaelzkjsq'  # пароль от почты
 EMAIL_USE_SSL = True
 
 DEFAULT_FROM_EMAIL = 'marinaprosche@yandex.ru'
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25

@@ -9,25 +9,30 @@
             <div class="container px-2 px-lg-5 my-5">
                 <div class="text-center text-purple">
                     <h1 class="display-4 fw-bolder">{{ nadv.head_adv }}</h1>
+                    <h1 class="display-13 fw-normal">(Автор: {{ nadv.author }})</h1>
                     <p class="lead fw-normal text-dark-50 mb-0">{{ nadv.text_adv|safe }}</p>
                 </div>
             </div>
         </header>
 
-<p style="text-align: center;">&nbsp;</p>
+
+    <h10 style="text-align: right;"><span style="color: #333333;">
+        {% if request.user == nadv.author%}
+    <a href="{% url 'advedit' nadv.id %}"><u>Редактировать объявление</u></a>
+   <br> <a href="{% url 'advdelete' nadv.id %}"><u>Удалить объявление</u></a>
+{% endif %}
+    </span></h10>
+
 <hr />
 <h4 style="text-align: right;"><span style="color: #333333;">
     {{ nadv.date_adv }}&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span></h4>
 <h4 style="text-align: right;"><span style="color: #333333;">
     Категория:&nbsp;<img src="computer" alt="" /><img src="computer" alt="" />
     {{ nadv.category_name }}&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span></h4>
+    <!--    кнопки изменения/удаления для юзера-->
+    {% if nadv.content %}
 <img src="{{ nadv.content.url}}" alt="connect" style="max-height:300px">
-
-<!--{% block title %}-->
-<!--"Новость"-->
-<!--{% endblock title %}-->
-
- <!-- Button trigger modal -->
+    {% endif %}
 
 
     <!-- Отклики-->
@@ -39,15 +44,17 @@
 </div>
     {% endif %}
 
-
-<form action="" method="post">
+<form action="" id="reply" method="post">
+    <label for="reply"></label>
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Save" />
 
+ <hr>{% if nadv.reply.all %}
+    Комментарии:
+<!--    {{nadv.reply.all.count}}-->
+{% endif %}
 <br>
-Комментарии ({{nadv.reply.all.count}})
-    <hr>
 {% for n in  nadv.reply.all %}
     {% if n.status is True %}
     <li>

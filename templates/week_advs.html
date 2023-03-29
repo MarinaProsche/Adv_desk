@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cписок Объявлений</title>
+</head>
+<body>
+<h2>Ваша статья среди популярных! Скорее зайдите почитать отклики!</h2>
+<ul>
+  {% for n in all_advs %}
+    <li><a href="{{ link }}{{ n.get_absolute_url }}">{{ n.head_adv }}</a></li>
+  {% endfor %}
+</ul>
+
+</body>
+</html>

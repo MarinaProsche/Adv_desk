@@ -1,24 +1,26 @@
 {% extends 'flatpages/default.html' %}
+{% load custom_tags %}
+
 
  {% block content %}
 <!-- Header-->
         <header class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Драконы в башне</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Добро пожаловать на фан-сайт лучшей рпг в мире</p>
+                    <h1 class="display-4 fw-bolder">Название Игры</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Текст и приветственные слова, правила</p>
                 </div>
             </div>
         </header>
 <form action="" method="post">
     {% csrf_token %}
     {{ form}}
-   
+</form>
 
 <div class="text-center text-dark">
 <form action="" method="get">
     <!-- Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями -->
-    {{ filterset.form.as_ul }}
+    <br>{{ filterset.form.as_p }}
     <!-- Добавим кнопку отправки данных формы -->
     <input type="submit" value="найти">
   </form>
@@ -31,7 +33,7 @@
                     {%for nadv in adv%}
                     <div class="col mb-5">
                         <div class="card h-100">
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">{{nadv.category_name}}</div>
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">{{nadv.get_category_name_display}}</div>
                             <!-- ADV image-->
                             {% if nadv.content %}
 
@@ -44,11 +46,21 @@
                                     <!-- ADV head-->
                                     <h5 class="fw-bolder">{{nadv.head_adv}}</h5>
                                     <div class="d-flex justify-content-center small text-warning mb-2">
+                                        {% if nadv.reply.all.count > 1 %}
                                         <div class="bi-star-fill"></div>
+                                        {% if nadv.reply.all.count > 2 %}
                                         <div class="bi-star-fill"></div>
+                                        {% if nadv.reply.all.count > 3 %}
                                         <div class="bi-star-fill"></div>
+                                        {% if nadv.reply.all.count > 4 %}
                                         <div class="bi-star-fill"></div>
+                                        {% if nadv.reply.all.count > 5 %}
                                         <div class="bi-star-fill"></div>
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endif %}
                                     </div>
                                     <!-- Prewiew-->
                                     {{nadv.preview|truncatechars:30}}
@@ -65,11 +77,31 @@
                     <h2>Нет объявлений!</h2>
                 {% endif %}
 
-
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+<div class="text-center">
+{% if page_obj.has_previous %}
+       {# Для каждой ссылки пагинации указываем обработку через новый тег #}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+    </div>
 
 {% endblock content %}

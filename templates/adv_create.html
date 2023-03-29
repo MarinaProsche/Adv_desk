@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 {% extends 'flatpages/default.html' %}
 {% load static %}
-
 <html lang="en">
 
+<body>
+
 {% block title %}
-Add post
+Добавить пост
 {% endblock title %}
 
 {% block content %}
@@ -16,12 +17,13 @@ Add post
     <br>Заголовок: {{ form.head_adv }}
     <br>Категория: {{ form.category_name }}
     <br>файл для обложки: {{ form.content }}
-    Текст
-    {% autoescape off %}
+    Текст:
+
     <br>{{ form.text_adv }}
-    {% endautoescape %}
-    <button type="submit">Upload</button>
+
+    <button type="submit">Опубликовать</button>
     <hr class="my-4" />
 </form>
 
 {% endblock content %}
+</body>

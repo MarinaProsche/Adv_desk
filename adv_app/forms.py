@@ -3,7 +3,7 @@ from django.forms import inlineformset_factory, Textarea
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm
 
-from .models import Adv, Author, User, Reply
+from .models import Adv, User, Reply
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 
@@ -30,19 +30,14 @@ class AdvForm(forms.ModelForm):
 
         return cleaned_data
 
-
-# class AddMediaForm(forms.ModelForm):
-#     class Meta:
-#         model = Media
-#         fields = ['content']
-
 class CreateReplyForm(forms.ModelForm):
     class Meta:
         model = Reply
-        fields = ('text_reply',)
+        fields = ['text_reply']
+        labels = {'text_reply':'Ваш комментарий:'}
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
-        self.fields['text_reply'].widget = Textarea(attrs={'rows': 5})
+        self.fields['text_reply'].widget = Textarea(attrs={'rows': 5, 'value' : 'Оставьте комментарий'})
 
